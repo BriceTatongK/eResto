@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>eRestoU | Menus et repas</title>
+    <link rel="stylesheet" type="text/css" href="../styles/eResto.css">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Menus et repas</h1>
+            <a href="http://www.crous-bfc.fr" target="_blank"></a><a href="http://www.univ-fcomte.fr" target="_blank"></a>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="../index.php">Accueil</a></li>
+                <li><a href="../php/menu.php">Menus et repas</a></li>
+                <li><a href='../php/deconnexion.php'>Déconnexion [fdadeau]</a></li>
+            </ul>
+        </nav>
+        <h2>Jeudi 13 Octobre 2022</h2>
+        <form action="menu.php" method="GET" style="text-align: center;"><a href="menu.php?jour=12&mois=10&annee=2022" style="float: left;">Jour précédent</a><a href="menu.php?jour=14&mois=10&annee=2022" style="float: right;">Jour suivant</a>Date : <select name="jour">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13" selected>13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+            </select><select name="mois">
+                <option value="1">janvier</option>
+                <option value="2">février</option>
+                <option value="3">mars</option>
+                <option value="4">avril</option>
+                <option value="5">mai</option>
+                <option value="6">juin</option>
+                <option value="7">juillet</option>
+                <option value="8">août</option>
+                <option value="9">septembre</option>
+                <option value="10" selected>octobre</option>
+                <option value="11">novembre</option>
+                <option value="12">décembre</option>
+            </select><select name="annee">
+                <option value="2022" selected>2022</option>
+                <option value="2023">2023</option>
+            </select><input type="submit" value="Consulter" style="padding: 2px;"></form>
+        <p class="notice">Toutes les commandes sont préparées sur des plateaux contenant des couverts (couteau, fourchette, petite cuillère) et un verre. </p>
+        <form method="POST" action="menu.php?jour=13&mois=10&annee=2022">
+            <section>
+                <h3>Entrées</h3>
+                <div class="flexdiv">
+                    <input id="radEntree0" name="radEntree" type="radio" value="0">
+                    <label class="plat" for="radEntree0">
+                        <img src="../images/repas/0.jpg" alt="Pas d'entrée" title="Pas d'entrée">Pas d'entrée
+                    </label>
+                    <input id="radEntree3" name="radEntree" type="radio" value="3">
+                    <label class="plat" for="radEntree3">
+                        <img src="../images/repas/3.jpg" alt="D&eacute;s de betteraves" title="D&eacute;s de betteraves">D&eacute;s de betteraves
+                    </label>
+                    <input id="radEntree6" name="radEntree" type="radio" value="6">
+                    <label class="plat" for="radEntree6">
+                        <img src="../images/repas/6.jpg" alt="Mini-quiche lorraine" title="Mini-quiche lorraine">Mini-quiche lorraine
+                    </label>
+                    <input id="radEntree7" name="radEntree" type="radio" value="7">
+                    <label class="plat" for="radEntree7">
+                        <img src="../images/repas/7.jpg" alt="Salade de coleslaw" title="Salade de coleslaw">Salade de coleslaw
+                    </label>
+                </div>
+            </section>
+            <section>
+                <h3>Plat</h3>
+                <div class="flexdiv">
+                    <input id="radPlat0" name="radPlat" type="radio" value="0">
+                    <label class="plat" for="radPlat0">
+                        <img src="../images/repas/0.jpg" alt="Pas de plat" title="Pas de plat">Pas de plat
+                    </label>
+                    <input id="radPlat12" name="radPlat" type="radio" value="12">
+                    <label class="plat" for="radPlat12">
+                        <img src="../images/repas/12.jpg" alt="Cuisse de poulet" title="Cuisse de poulet">Cuisse de poulet
+                    </label>
+                    <input id="radPlat21" name="radPlat" type="radio" value="21">
+                    <label class="plat" for="radPlat21">
+                        <img src="../images/repas/21.jpg" alt="Lieu noir" title="Lieu noir">Lieu noir
+                    </label>
+                </div>
+            </section>
+            <section>
+                <h3>Accompagnement</h3>
+                <div class="flexdiv">
+                    <input id="cb28" name="cb28" type="checkbox" value="28">
+                    <label class="plat" for="cb28">
+                        <img src="../images/repas/28.jpg" alt="Ratatouille" title="Ratatouille">Ratatouille
+                    </label>
+                    <input id="cb29" name="cb29" type="checkbox" value="29">
+                    <label class="plat" for="cb29">
+                        <img src="../images/repas/29.jpg" alt="Riz" title="Riz">Riz
+                    </label>
+                    <input id="cb33" name="cb33" type="checkbox" value="33">
+                    <label class="plat" for="cb33">
+                        <img src="../images/repas/33.jpg" alt="Julienne de l&eacute;gumes" title="Julienne de l&eacute;gumes">Julienne de l&eacute;gumes
+                    </label>
+                </div>
+            </section>
+            <section>
+                <h3>Fromage/dessert</h3>
+                <div class="flexdiv"><input id="radDessert0" name="radDessert" type="radio" value="0">
+                    <label class="plat" for="radDessert0">
+                        <img src="../images/repas/0.jpg" alt="Pas de fromage/déssert" title="Pas de fromage/déssert">Pas de fromage/déssert
+                    </label>
+                    <input id="radDessert42" name="radDessert" type="radio" value="42">
+                    <label class="plat" for="radDessert42">
+                        <img src="../images/repas/42.jpg" alt="Portion de camembert" title="Portion de camembert">Portion de camembert
+                    </label>
+                    <input id="radDessert43" name="radDessert" type="radio" value="43">
+                    <label class="plat" for="radDessert43">
+                        <img src="../images/repas/43.jpg" alt="Tarte aux myrtilles" title="Tarte aux myrtilles">Tarte aux myrtilles
+                    </label>
+                    <input id="radDessert45" name="radDessert" type="radio" value="45">
+                    <label class="plat" for="radDessert45">
+                        <img src="../images/repas/45.jpg" alt="Babybel" title="Babybel">Babybel
+                    </label>
+                </div>
+            </section>
+            <section>
+                <h3>Boisson</h3>
+                <div class="flexdiv">
+                    <input id="radBoisson34" name="radBoisson" type="radio" value="34">
+                    <label class="plat" for="radBoisson34">
+                        <img src="../images/repas/34.jpg" alt="Carafe d&#039;eau" title="Carafe d&#039;eau">Carafe d&#039;eau
+                    </label>
+                    <input id="radBoisson35" name="radBoisson" type="radio" value="35">
+                    <label class="plat" for="radBoisson35">
+                        <img src="../images/repas/35.jpg" alt="Soda au cola" title="Soda au cola">Soda au cola
+                    </label>
+                    <input id="radBoisson36" name="radBoisson" type="radio" value="36">
+                    <label class="plat" for="radBoisson36">
+                        <img src="../images/repas/36.jpg" alt="Soda &agrave; l&#039;orange" title="Soda &agrave; l&#039;orange">Soda &agrave; l&#039;orange
+                    </label>
+                    <input id="radBoisson37" name="radBoisson" type="radio" value="37">
+                    <label class="plat" for="radBoisson37">
+                        <img src="../images/repas/37.jpg" alt="Soda au citron" title="Soda au citron">Soda au citron
+                    </label>
+                </div>
+            </section>
+            <section>
+                <h3>Suppléments</h3>
+                <div class="flexdiv">
+                    <label class="plat">
+                        <img src="../images/repas/38.jpg" alt="Pain" title="Pain">Pain
+                        <input type="number" min="0" max="2" name="num38" value="0">
+                    </label>
+                    <label class="plat">
+                        <img src="../images/repas/39.jpg" alt="Serviette en papier" title="Serviette en papier">Serviette en papier
+                        <input type="number" min="0" max="2" name="num39" value="0">
+                    </label>
+                </div>
+            </section>
+            <section>
+                <h3>Validation de la commande</h3>
+                <p class="attention">Toute commande passée qui ne sera pas récupérée sera facturée à l'étudiant la somme forfaitaire de 20 euros.</p>
+                <p style="text-align:center;">
+                    <input type="submit" name="btnCommander" value="Commander">
+                    <input type="reset" name="btnAnnuler" value="Annuler">
+                </p>
+            </section>
+        </form>
+        <h4 id="commentaires">Commentaires sur ce menu</h4>
+        <p>Pas de commentaires pour ce menu.</p>
+        <footer>&copy; Master Info EAD - Octobre 2022 - Université de Franche-Comté - CROUS de Franche-Comté</footer>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,637 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+/** -- DEBUT DE LA FEUILLE DE STYLE -- **/
+
+body {
+    font-family: arial, verdana, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    --color1: #e61a23;
+    background-color: lightgrey;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: var(--color1);
+}
+a:hover {
+    text-decoration: underline;   
+}
+
+
+h1 {
+    position: absolute; 
+    color: #000; 
+    bottom: 0px;
+    width: calc(100% - 10px);
+    text-shadow: 2px 2px 5px #FFF;
+    font-size: 32px;
+    margin: 20px 10px;
+    font-weight: bold;
+}
+h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+h3 {
+    padding-top: 10px;
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--color1);
+    border-bottom: solid 2px var(--color1);
+}
+h4 {
+    margin: 30px 0 0 0 !important;
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+p {
+    margin: 10px 5px;   
+}
+p:last-of-type {
+    margin-bottom: 0;   
+}
+
+strong {
+    font-weight: bold; 
+    color: var(--color1);
+}
+
+p > a[href^=http]:hover:after {
+    content: '';
+    padding-left: 20px;
+    background-image: url(../images/lien_externe.gif);
+    background-position: center right;
+    background-repeat: no-repeat;
+}
+
+/** Menu **/
+
+nav {
+    position: sticky;
+    top: 0; 
+    left: 0;
+    z-index: 10000;
+}
+
+nav a, nav a:visited {
+    width: 100%;
+    color: white;
+    position: relative;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 18px;
+}
+nav a:hover {
+    text-decoration: none;   
+}
+nav a:hover:before {
+    position: absolute; 
+    content: '\2630';
+    top: -5px;
+    left: -20px;    
+}
+
+nav ul {
+    width: 100%;
+    background-color: #e61a23;
+    padding: 5px 0;
+    border-radius: 0 0 10px 10px;
+}
+
+nav li {
+    display: inline-block;
+    width: 15%;
+    text-align: center;
+    padding: 0 20px 0 30px; 
+}
+
+nav li:last-child {
+    float: right;
+    text-align: right;
+    width: 300px;
+}
+    
+
+
+
+/** Entête **/
+
+main > header {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 300px;
+    padding: 20px;
+    background: transparent url(../images/header.jpg);
+    background-origin: center;
+    background-size: cover;
+}
+
+main > header:before {
+    content: '';
+    position: relative;
+    display: block;
+    width: 500px;
+    height: 140px;
+    background-image: url(../images/logo-eRestoU.png);
+    background-repeat: no-repeat;
+    background-size: 500px 100px;
+    position: absolute; 
+    top: 30px;
+}   
+main > header:after {
+    position: relative;
+    display: block;
+    margin: 0;
+    margin-top: 150px;
+    padding: 0;
+    font-size: 20px;
+    content: 'Le resto-U 100% digital !';
+    font-style: italic;
+}
+
+
+main > header img, main > header > a {
+    position: absolute;
+}
+
+main > header > a:nth-of-type(1) {
+    display: block;
+    right: 10px;
+    top: 10px;
+    width: 90px;
+    height: 90px;
+    background: transparent url("../images/logo-Crous-BFC.png") no-repeat;
+}
+main > header > a:nth-of-type(2) {
+    display: block;
+    right: 10px;
+    bottom: 10px;
+    width: 200px;
+    height: 55px;
+    background: transparent url("../images/logo-UFC.png") no-repeat;
+}
+
+
+/** Contenu de la page **/
+
+main {
+    position: relative;
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 960px;
+    min-height: 99vh;
+    background-color: white; 
+}
+#background {
+    height: 434px;
+    background-image: url(../images/resto-u.jpg);
+    background-attachment: fixed;
+    background-size: 960px;
+    background-repeat: no-repeat;
+    background-position: center 60%;
+}
+
+main > * {
+    margin: 0;
+    background-color: white;
+}
+main > *:not(nav) {
+     padding: 10px;   
+}
+
+ol {
+    list-style-type: decimal;
+    padding-bottom: 5px;
+}
+
+*:not(nav) > ul > li, ol > li {
+    margin: 10px 0 5px 40px;
+}
+*:not(nav) > ul > li {
+    padding-left: 5px;
+}
+    
+*:not(nav) > ul {
+    list-style-type: "\1F44D";
+}
+
+section > h3 {
+    padding-top: 35px;
+    margin-top: -35px;
+}
+
+section h4 + p {
+    padding: 0 10px;   
+}
+
+abbr {
+    cursor: default;   
+}
+
+/** Zone de description des différentes technologies **/
+
+.technos {
+    position: relative;
+    height: 200px;
+    width: 100%;    
+}
+.technos > img {
+    position: absolute;
+}
+#logoHTML {
+    top: 5%;
+    left: 5%;
+}
+#logoCSS {
+    top: 30%;
+    left: 17%;
+}
+#logoJS {
+    top: 10%;
+    left: 30%;
+}
+#logoAJAX {
+    bottom: 10%;
+    left: 40%;
+}
+#logoPHP {
+    top: 25%;
+    right: 35%;
+}
+#logoMySQL {
+    bottom: 15%;
+    right: 25%;
+}
+#logoPWA {
+    top: 30%;
+    right: 2%;
+}
+
+
+/** Zone contenant les 3 liens de navigation intra-page (carrés gris) **/ 
+.liens {
+    margin: 0px 0 0px 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.liens a {
+    box-sizing: border-box;
+    width: 240px;
+    height: 240px;
+    font-size: 25px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    background: radial-gradient(white, lightgrey);
+    padding-top: 90px;
+    margin: 10px;
+    box-shadow: 5px 5px 5px grey;
+}
+.liens a:last-of-type {
+    padding-top: 70px;
+}
+.liens a:hover {
+    text-decoration: none; 
+    background: radial-gradient(#FFAAAA, var(--color1));
+    color: white;
+    box-shadow: 5px 5px 5px darkred;
+}
+
+
+/** Footer **/
+main {
+    padding-bottom: 50px;
+}   
+main > footer {
+    position: absolute;
+    bottom: 0;
+    padding: 10px !important;
+    text-align: center;
+    font-size: 16px;
+    color: white;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--color1);
+}
+
+
+/** Formulaire **/
+form {
+    margin: 20px 0;   
+}
+
+form table {
+    margin: 10px auto;
+}
+
+form table td {
+    padding: 2px 4px;
+    width: auto;
+}
+
+form table td:first-child:not(:only-child) {
+    text-align: right;
+}
+
+
+form :invalid {
+    color: red;
+    border: solid 1px #FF7777;
+    box-shadow: 2px 2px 2px #FF7777, 
+                2px -2px 2px #FF7777,
+                -2px 2px 2px #FF7777,
+                -2px -2px 2px #FF7777;
+}
+
+form label {
+    display: block; 
+}
+
+form table tr:last-of-type > td {
+    padding-top: 20px;   
+}
+
+form input[type=submit], form input[type=reset] {
+    color: black;
+    background-color: lightgrey;
+    border: solid 2px black;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0 10px;
+    font-weight: bold;
+    width: 120px;
+    font-size: 14px;
+    cursor: pointer;
+}
+form input[type=submit]:hover, form input[type=reset]:hover {
+    color: white;
+    background-color: red;
+    border: solid 2px transparent;
+}
+
+form input[type=number] {
+    margin: 5px auto;
+    display: block;
+    width: 40px;
+}
+    
+form select {
+    font-size: 16px;   
+}
+
+form textarea {
+    vertical-align: top;
+    width: 400px;
+    height: 100px;
+}
+
+form input[type=file] {
+    width: 300px;
+}   
+
+
+/** Choix du menu **/
+
+.flexdiv {
+    position: relative; 
+    overflow-x: auto;
+    overflow-y: scroll;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.flexdiv input[type=radio], .flexdiv input[type=checkbox] {
+    display: none;
+}
+
+.flexdiv > label {
+    display: inline-block;
+    width: 160px;
+    margin: 10px 20px;
+    position: relative;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+
+.flexdiv input:checked + .plat {
+    border: solid 2px darkgreen;
+}
+
+.flexdiv .plat {
+    border: solid 2px transparent;
+    display: inline-block;
+    width: 160px;
+    padding: 5px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.flexdiv .plat img {
+    width: 150px;
+    display: block;
+    margin: 5px auto;
+}
+.flexdiv .plat {
+    text-align: center;   
+}
+
+
+/** Blocs attention et notice **/
+
+.attention {
+    border: solid 2px red;
+    width: 80%;
+    padding: 10px;
+    border-radius: 20px;
+    margin: 20px auto;
+}
+.attention:before {
+    display: block;
+    float: left;
+    margin-right: 10px;
+    content: url(../images/attention.png);
+}
+
+.notice {
+    border: solid 2px blue;
+    background-color: blue;
+    color: white;
+    width: 80%;
+    padding: 10px;
+    border-radius: 20px;
+    margin: 20px auto;
+}
+.notice:before {
+    display: block;
+    float: left;
+    margin-right: 10px;
+    padding: 2px;
+    height: 48px;
+    width: 50px;
+    background-color: white;
+    content: url(../images/notice.png);
+    border-radius: 50%;
+}
+
+
+/** entetes et titres du formulaire **/
+
+form header, form footer {
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px 0;
+    text-align: center;
+}
+form header input[type], form footer input[type] {
+    width: 140px;   
+    margin: 0 10px;
+}
+
+
+/** video **/
+video {
+    display: block;
+    margin: 10px auto;
+    width: 60%;
+    height: auto;
+}
+
+#pi + span {
+    display: none;
+}
+#pi:hover + span {
+    padding-left: 5px;
+    display: inline;
+    font-size: 80%;
+}
+
+/** Commentaires **/
+
+article {
+    position: relative;
+    background-color: #EEE;
+    border-radius: 10px;
+    margin: 10px;
+    min-height: 90px;
+}
+
+article form {
+    display: none;
+    position: absolute; 
+    margin: 5px;
+    padding: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+article:hover form {
+    display: block;   
+}
+
+article h5 {
+    font-weight: bold;   
+}
+
+article p {
+    font-style: italic;
+    padding: 0 20px;
+}
+
+article footer {
+   margin: 10px 0 0 0;    
+}
+
+article a {
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+article img {
+    border: solid 1px #000;
+    height: 90px;
+    width: auto;
+}
+
+/** Messages d'erreur ou de succès **/ 
+
+.erreur, .succes {
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+    width: 80%;
+    margin: 10px auto;
+    border: solid 2px red;
+    padding: 5px;
+    line-height: 1.5;
+}
+.succes {
+    color: darkgreen;
+    border-color: darkgreen;
+    text-align: center;
+}
+
+.erreur ul {
+    list-style-type: "\1F61E" !important;
+}
+

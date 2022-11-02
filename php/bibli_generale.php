@@ -6,6 +6,36 @@ require_once('bibli_params.php');
 
 //___________________________________________________________
 /**
+ * affiche le menu de navigation, élément commun à toutes les pages
+ * la fonction verifie si l'utilisateur est authentifié
+ * 
+ * @param   string      $NumeroEtudiant     variable de session  $_SESSION['etNumero'], contenant le numero étudiant
+ *
+ * @return void
+ */
+function MenuNavigation($NumeroEtudiant) : void {
+
+    echo
+    '<nav>',
+            '<ul>',
+                '<li><a href="./index.php">Accueil</a></li>',
+                '<li><a href="./php/menu.php">Menus et repas</a></li>';
+                
+    if (isset($NumeroEtudiant)) {
+        echo "<li><a href='./php/deconnexion.php'>Deconnexion[$NumeroEtudiant]</a></li>";
+    }else {
+        echo '<li><a href="./php/connexion.php">Connexion</a></li>';
+    }
+
+    echo'</ul>','</nav>';
+}
+
+
+
+
+
+//___________________________________________________________
+/**
  * Envoie à la sortie standard la fin du code HTML d'une page
  *
  * @return void
