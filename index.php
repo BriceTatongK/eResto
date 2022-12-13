@@ -1,76 +1,41 @@
 <?php
 
-require('./php/bibli_params.php');
-require('./php/bibli_generale.php');
+require_once('./php/bibli_eRestoU.php');
+require_once('./php/bibli_generale.php');
 
-# affichage de tous les erreurs dans le navigateur
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting( E_ALL );
-
-session_start();
-
-#################  start try
+// bufferisation
 ob_start();
 
-//htmlDebut('les etudiants');
+// ouverture nouvelle session
+session_start();
 
-$bd = bdConnect();
+// affiche entete de la page en fonction du 'Titre'; 'path css'
+AffEntete('Accueil', './styles/eResto.css');
 
-//-- Requête ----------------------------------------
-$sql = 'SELECT * FROM  etudiant';
-$r = mysqli_query($bd, $sql);
+// affiche connexion ou deconnexion en fonction de si l'utilisateur est connecté ou pas.
+if (isset($_SESSION['etNumero'])) {AffMenuNavigation($_SESSION['etNumero'], '.');}
+else{AffMenuNavigation(-1, '.');}
 
-//-- Traitement -------------------------------------
-while($enr = mysqli_fetch_assoc($r)){
-    foreach($enr as $var => $val){
-        echo $var, ':', $val, "    ";
-    }
-    echo '<br>';
-}
+// affiche le contenu de la page. Le suffixe 'HO' => 'Here Only'
+AffContenuPageINDEX();
 
-// Libération de la mémoire associée au résultat de la requête
-mysqli_free_result($r);
-//-- Déconnexion ------------------------------------
-mysqli_close($bd);
+// pied de page
+AffPiedDePage();
 
-//htmlFin();
-##################### end try
+// envoi du buffer
+ob_end_flush();
 
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ coding
 
-echo
-'<!doctype html>',
-'<html lang="fr">',
 
-'<head>',
-    '<meta charset="UTF-8">',
-    '<title>eRestoU | Accueil</title>',
-    '<link rel="stylesheet" type="text/css" href="./styles/eResto.css">',
-'</head>',
 
-'<body>',
-    '<main>',
-        '<header>',
-            '<h1>Accueil</h1><a href="http://www.crous-bfc.fr" target="_blank"></a><a href="http://www.univ-fcomte.fr" target="_blank"></a>
-        </header>',
-        '<nav>',
-            '<ul>',
-                '<li><a href="./index.php">Accueil</a></li>',
-                '<li><a href="./php/menu.php">Menus et repas</a></li>';
-
-if (isset($_SESSION['etNumero'])) {
-    echo        "<li><a href='./php/deconnexion.php'>Deconnexion[$_SESSION[etNumero]]</a></li>";
-}else {
-    echo        '<li><a href="./php/connexion.php">Connexion</a></li>';
-}
-
-echo
-            '</ul>',
-        '</nav>';
-
-echo
-        '<p>Finies les interminables files d\'attente qui s\'étiraient jusqu\'à l\'extérieur des bâtiments. </p>',
+/**
+ *  fonction affiche contenu de cette page. 
+ *
+ * @return void
+ */
+function AffContenuPageINDEX(): void{
+    echo
+    '<p>Finies les interminables files d\'attente qui s\'étiraient jusqu\'à l\'extérieur des bâtiments. </p>',
         '<p>Inspirées du système click-and-collect des grandes enseignes de la restauration rapide, les commandes du Resto-U sont désormais digitalisées pour un <strong>repas 2.0</strong> !</p>',
         '<section>',
             '<h3>eResto-U, qu\'est-ce que c\'est ?</h3>',
@@ -115,12 +80,7 @@ echo
             '<p>Pour vous aider à suivre votre régime, ou <strong>contrôler votre bilan carbone</strong>, chaque commande récapitule son apport énergétique journalier, ainsi que son empreinte carbone. Si vous suivez un régime particulier, ou si vous vous fixez un objectif de réduction de vos émissions de CO2, l\'application mobile est en mesure de composer automatiquement votre plateau pour vous accompagner dans l\'atteinte de vos objectifs. </p>',
             '<h4>Sécurité et données personnelles</h4><img style="float: right; height: 80px; width: auto; margin-top: 10px; margin-left: 10px;" src="images/rgpd.png" alt="Logo RGPD">',
             '<p>Le CROUS collecte des données sur les repas pris, à des fins de statistiques, indépendamment des individus. En d\'autres termes, <strong>il n\'est pas question d\'enregistrer les habitudes alimentaires personnelles</strong> des usagers du CROUS et encore moins de les vendre à des géants de la restauration qui sont de vrais clowns. </p>',
-        '</section>',
-        '<footer>&copy; Master Info EAD - Octobre 2022 - Université de Franche-Comté - CROUS de Franche-Comté</footer>',
-    '</main>',
-'</body>',
-
-'</html>';
-
+        '</section>';
+}
 
 ?>

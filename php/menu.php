@@ -1,44 +1,67 @@
 <?php
-require('bibli_params.php');
+require('bibli_eRestoU.php');
 require('bibli_generale.php');
 
-# affichage de tous les erreurs dans le navigateur
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting( E_ALL );
+// bufferisation
+ob_start();
 
+// nouvelle session
 session_start();
 
-echo
+// maintient l'url de cette page
+$_SESSION['url'] = $_SERVER['REQUEST_URI'];
 
-'<!doctype html>',
-'<html lang="fr">',
 
-'<head>',
-    '<meta charset="UTF-8">',
-    '<title>eRestoU | Menus et repas</title>',
-    '<link rel="stylesheet" type="text/css" href="../styles/eResto.css">',
-'</head>',
+######################################################
+$bd = bdConnect();
 
-'<body>',
-    '<main>',
-        '<header>',
-            '<h1>Menus et repas</h1><a href="http://www.crous-bfc.fr" target="_blank"></a><a href="http://www.univ-fcomte.fr" target="_blank"></a>',
-        '</header>',
-        '<nav>',
-            '<ul>',
-                '<li><a href="../index.php">Accueil</a></li>',
-                '<li><a href="../php/menu.php">Menus et repas</a></li>';
+//-- Requête ----------------------------------------
+$sql = 'SELECT * FROM  etudiant';
+$r = mysqli_query($bd, $sql);
 
-if (isset($_SESSION['etNumero'])) {
-    echo        "<li><a href='./php/deconnexion.php'>Deconnexion[$_SESSION[etNumero]]</a></li>";
-}else {
-    echo        '<li><a href="./php/connexion.php">Connexion</a></li>';
+//-- Traitement -------------------------------------
+while($enr = mysqli_fetch_assoc($r)){
+    foreach($enr as $var => $val){
+        echo $var, ':', $val, "    ";
+    }
+    echo '<br>';
 }
 
-echo
-            '</ul>',
-        '</nav>';
+// Libération de la mémoire associée au résultat de la requête
+mysqli_free_result($r);
+//-- Déconnexion ------------------------------------
+mysqli_close($bd);
+########################################################
+
+
+// Entete de page
+AffEntete('Menus et repas', '../styles/eResto.css');
+
+// affiche connexion ou deconnexion en fonction de si l'utilisateur est connecté ou pas.
+if (isset($_SESSION['etNumero'])) {AffMenuNavigation($_SESSION['etNumero'], '..');}
+else{AffMenuNavigation(-1, '..');}
+
+// contenu de cette page
+AffContenuPageMENU();
+
+
+// fermeture de la connexion
+mysqli_close($bd);
+
+// pied de page
+AffPiedDePage();
+
+// envoi du buffer
+ob_end_flush();
+
+
+
+
+/***************************************
+ * affiche contenu de la page
+ * A MODIFIER
+ ****************************************/
+function AffContenuPageMENU(): void{
 
 echo
         '<h2>Mercredi 12 Octobre 2022</h2>',
@@ -191,12 +214,9 @@ echo
             '<h5>Commentaire de Eric Merlet, publié le 12 octobre 2022 à 17h42</h5>',
             '<p>J&#039;ai bien aim&eacute;, mais la viande manquait un peu de cuisson. </p>',
             '<footer>Note : 3 / 5</footer>',
-        '</article>',
-        '<footer>&copy; Master Info EAD - Octobre 2022 - Université de Franche-Comté - CROUS de Franche-Comté</footer>',
-    '</main>',
-'</body>',
+        '</article>';
 
-'</html>';
+}
 
 
 ?>

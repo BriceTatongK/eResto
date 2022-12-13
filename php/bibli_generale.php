@@ -1,36 +1,108 @@
 <?php
 
-require_once('bibli_params.php');
 
-
-
-//___________________________________________________________
-/**
- * affiche le menu de navigation, élément commun à toutes les pages
- * la fonction verifie si l'utilisateur est authentifié
+/*********************************************************
+ *        Bibliothèque generale de fonctions
  * 
- * @param   string      $NumeroEtudiant     variable de session  $_SESSION['etNumero'], contenant le numero étudiant
+ * Les régles de nommage sont les suivantes.
+ * Les noms des fonctions respectent la notation Pascal case.
+ *
+ * Ils commencent en général par un terme définisant le "domaine" de la fonction :
+ *  Aff   la fonction affiche du code html / texte destiné au navigateur
+ *  Html  la fonction renvoie du code html / texte
+ *  Bd    la fonction gère la base de données
+ *  Util  la fonction utile, effectue des taches spécifiques sur des variables ou objets du project.
+ *
+ * Les fonctions qui ne sont utilisés que dans un seul script
+ * sont définies dans le script et les noms de ces fonctions se
+ * sont suffixées avec le nome du fichier de la page. EX: menu.php => AffContenuPadeMENU()
+ *
+ *********************************************************/
+
+ //________________________________________________
+/**
+ * Teste si un entier est compris entre 2 autres
+ *
+ * Les bornes $min et $max sont incluses.
+ *
+ * @param   int    $x  valeur à tester
+ * @param   int    $min  valeur minimale
+ * @param   int    $max  valeur maximale
+ *
+ * @return  bool   true si $min <= $x <= $max
+ */
+function UtilEstEntre(int $x, int $min, int $max):bool {
+    return ($x >= $min) && ($x <= $max);
+}
+
+//______________________________________________
+/**
+ * Teste si une valeur est une valeur entière
+ *
+ * @param   mixed    $x  valeur à tester
+ *
+ * @return  bool     true si entier, false sinon
+ */
+function UtilEstEntier(mixed $x):bool {
+    return is_numeric($x) && ($x == (int) $x);
+}
+
+
+//_______________________________________________________________
+/**
+ * Affichage de l'entete HTML + entete de la page web (bandeau de titre + menu)
+ *
+ * @param  string  $title  Le titre de la page (<head>)
+ * @param  string  $css    Le chemin vers la feuille de style à inclure
  *
  * @return void
  */
-function MenuNavigation($NumeroEtudiant) : void {
+function AffEntete(string $titre, string $css): void {
+    
+    echo '<!doctype html>', 
+        '<html lang="fr">', 
+            '<head>', 
+                '<meta charset="UTF-8">', 
+                '<title>eRestoU | ', $titre, '</title>', 
+                '<link rel="stylesheet" type="text/css" href="', $css, '">', 
+            '</head>', 
+            '<body>',
+                '<main>',
+                    '<header>',
+                        '<h1>', $titre, '</h1>',
+                        '<a href="http://www.crous-bfc.fr" target="_blank"></a>',
+                        '<a href="http://www.univ-fcomte.fr" target="_blank"></a>',
+                    '</header>';
+}
+
+
+//__________________________________________________
+/**
+ * renvoie le code html du menu de navigation, 
+ * élément commun à toutes les pages
+ * la fonction verifie si l'utilisateur est authentifié
+ * 
+ * @param   int      $Numero     variable de session  $_SESSION['etNumero'], contenant le numero étudiant
+ * @param   string   $prefixe    pour obtenir le path correct aux pages
+ * 
+ * @return void
+ */
+function AffMenuNavigation($Numero, $prefixe) : void {
 
     echo
     '<nav>',
             '<ul>',
-                '<li><a href="./index.php">Accueil</a></li>',
-                '<li><a href="./php/menu.php">Menus et repas</a></li>';
-                
-    if (isset($NumeroEtudiant)) {
-        echo "<li><a href='./php/deconnexion.php'>Deconnexion[$NumeroEtudiant]</a></li>";
+                '<li><a href="', $prefixe, '/index.php">Accueil</a></li>',
+                '<li><a href="', $prefixe, '/php/menu.php">Menus et repas</a></li>';
+
+    if ( $Numero > -1 ) {
+        echo '<li><a href="', $prefixe, '/php/deconnexion.php">Deconnexion["',$Numero,']</a></li>';
     }else {
-        echo '<li><a href="./php/connexion.php">Connexion</a></li>';
+        echo '<li><a href="', $prefixe, '/php/connexion.php">Connexion</a></li>';
     }
 
     echo'</ul>','</nav>';
 }
-
-
 
 
 
@@ -40,43 +112,49 @@ function MenuNavigation($NumeroEtudiant) : void {
  *
  * @return void
  */
-function htmlFin() : void {
-    echo '</body></html>';
+function AffPiedDePage() : void{
+    echo '<footer>',
+            '&copy; Master Info EAD - Octobre 2022 - Université de Franche-Comté - CROUS de Franche-Comté',
+        '</footer>',
+    '</main>', 
+    '</body>',
+    '</html>';
 }
 
-//_____________________________________________________________
-/**
- * Envoie à la sortie standard le début du code HTML d'une page
+//__________________________________________________________
+/** 
+ *  Protection des sorties (code HTML généré à destination du client).
  *
- * @param string    $titre  Titre de la page
+ *  Fonction à appeler pour toutes les chaines provenant de :
+ *      - de saisies de l'utilisateur (formulaires)
+ *      - de la bdD
+ *  Permet de se protéger contre les attaques XSS (Cross site scripting)
+ *  Convertit tous les caractères éligibles en entités HTML, notamment :
+ *      - les caractères ayant une signification spéciales en HTML (<, >, ...)
+ *      - les caractères accentués
  *
- * @return void
+ *  Si on lui transmet un tableau, la fonction renvoie un tableau où toutes les chaines
+ *  qu'il contient sont protégées, les autres données du tableau ne sont pas modifiées.
+ *
+ * @param  array|string  $content   la chaine à protéger ou un tableau contenant des chaines à protéger
+ *
+ * @return array|string             la chaîne protégée ou le tableau
  */
-function htmlDebut(string $titre) : void {
-    $titre = htmlentities($titre, ENT_COMPAT, 'UTF-8');
-
-    echo '<!DOCTYPE html>',
-        '<html lang="fr">',
-            '<head>',
-                '<meta charset="UTF-8">',
-                '<title>', $titre, '</title>',
-                '<style>',
-                'body { font-size: 13px;', 
-                        'font-family: Verdana, sans-serif}',
-                'h3 {   font-size: 15px;',
-                        'margin: 0 0 15px 0;', 
-                        'padding: 5px 0;', 
-                        'text-align: center;', 
-                        'background: #FFF5AB}',
-                'h4 {   font-size: 13px;',
-                        'margin: 1em 0 0 0;',
-                        'padding: 3px;',
-                        'background: #ebebeb}',
-                '</style>',
-            '</head>',
-            '<body>',
-                '<h3>', $titre, '</h3>';
+function htmlProtegerSortie(array|string $content): array|string {
+    if (is_array($content)) {
+        foreach ($content as &$value) {
+            if (is_array($value) || is_string($value)){
+                $value = htmlProtegerSortie($value);
+            }
+        }
+        unset ($value); // à ne pas oublier (de façon générale)
+        return $content;
+    }
+    // $content est de type string
+    return htmlentities($content, ENT_QUOTES, encoding:'UTF-8');
 }
+
+
 
 
 //____________________________________________________________________________
@@ -93,7 +171,7 @@ function htmlDebut(string $titre) : void {
  *
  * @return  mysqli_result|bool          Résultat de la requête
  */
-function bdSendRequest(mysqli $bd, string $sql): mysqli_result|bool {
+function BdSendRequest(mysqli $bd, string $sql): mysqli_result|bool {
     try{
         return mysqli_query($bd, $sql);
     }
@@ -108,6 +186,8 @@ function bdSendRequest(mysqli $bd, string $sql): mysqli_result|bool {
 }
 
 
+
+
 //____________________________________________________________________________
 /**
  *  Ouverture de la connexion à la base de données en gérant les erreurs.
@@ -117,7 +197,7 @@ function bdSendRequest(mysqli $bd, string $sql): mysqli_result|bool {
  *
  *  @return mysqli  objet connecteur à la base de données
  */
-function bdConnect(): mysqli {
+function BdConnect(): mysqli {
     // pour forcer la levée de l'exception mysqli_sql_exception
     // si la connexion échoue
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -152,6 +232,8 @@ function bdConnect(): mysqli {
 }
 
 
+
+
 //____________________________________________________________________________
 /**
  * Arrêt du script si erreur de base de données
@@ -165,7 +247,7 @@ function bdConnect(): mysqli {
  *
  * @return void
  */
-function bdErreurExit(array $err):void {
+function BdErreurExit(array $err):void {
     ob_end_clean(); // Suppression de tout ce qui a pu être déja généré
 
     echo    '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">',
