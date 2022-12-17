@@ -13,8 +13,8 @@ session_start();
 AffEntete('Accueil', './styles/eResto.css');
 
 // affiche connexion ou deconnexion en fonction de si l'utilisateur est connecté ou pas.
-if (isset($_SESSION['etNumero'])) {AffMenuNavigation($_SESSION['etNumero'], '.');}
-else{AffMenuNavigation(-1, '.');}
+if (isset($_SESSION['etLogin'])) {AffMenuNavigation($_SESSION['etLogin'], '.');}
+else{AffMenuNavigation('', '.');}
 
 // affiche le contenu de la page. Le suffixe 'HO' => 'Here Only'
 AffContenuPageINDEX();

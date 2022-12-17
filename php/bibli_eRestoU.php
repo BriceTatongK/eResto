@@ -21,5 +21,24 @@ define('BD_USER', 'eRestoU_user'); // nom de l'utilisateur de la base
 define('BD_PASS', 'eRestoU_pass'); // mot de passe de l'utilisateur de la base
 
 
+// Définit le fuseau horaire par défaut à utiliser. Disponible depuis PHP 5.1
+date_default_timezone_set('Europe/Paris');
+
+//set locale
+setlocale(LC_ALL, 'fr_FR@euro', 'fr_FR');
+
+// Définit la date d'aujourd'hui au format AAAAMMJJ
+define ('DATE_AUJOURDHUI', date('Ymd'));
+define ('ANNEE_MIN', date('Y')-1);
+define ('ANNEE_MAX', date('Y')+1);
+
+// Nombre de plats de catégorie 'boisson'
+define ('NB_CAT_BOISSON', 4);
+
+// Nombre de plats de catégorie 'divers'
+define ('NB_CAT_DIVERS', 2);
+
+
+
 
 ?>

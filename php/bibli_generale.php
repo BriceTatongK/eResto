@@ -82,12 +82,12 @@ function AffEntete(string $titre, string $css): void {
  * élément commun à toutes les pages
  * la fonction verifie si l'utilisateur est authentifié
  * 
- * @param   int      $Numero     variable de session  $_SESSION['etNumero'], contenant le numero étudiant
+ * @param   string   $Login     variable de session  $_SESSION['etLogin'], contenant le numero étudiant
  * @param   string   $prefixe    pour obtenir le path correct aux pages
  * 
  * @return void
  */
-function AffMenuNavigation($Numero, $prefixe) : void {
+function AffMenuNavigation($Login, $prefixe) : void {
 
     echo
     '<nav>',
@@ -95,8 +95,8 @@ function AffMenuNavigation($Numero, $prefixe) : void {
                 '<li><a href="', $prefixe, '/index.php">Accueil</a></li>',
                 '<li><a href="', $prefixe, '/php/menu.php">Menus et repas</a></li>';
 
-    if ( $Numero > -1 ) {
-        echo '<li><a href="', $prefixe, '/php/deconnexion.php">Deconnexion["',$Numero,']</a></li>';
+    if ( $Login !== '' ) {
+        echo '<li><a href="', $prefixe, '/php/deconnexion.php">Deconnexion["',$Login,']</a></li>';
     }else {
         echo '<li><a href="', $prefixe, '/php/connexion.php">Connexion</a></li>';
     }
@@ -140,7 +140,7 @@ function AffPiedDePage() : void{
  *
  * @return array|string             la chaîne protégée ou le tableau
  */
-function htmlProtegerSortie(array|string $content): array|string {
+function HtmlProtegerSortie(array|string $content): array|string {
     if (is_array($content)) {
         foreach ($content as &$value) {
             if (is_array($value) || is_string($value)){
@@ -155,6 +155,104 @@ function htmlProtegerSortie(array|string $content): array|string {
 }
 
 
+
+//___________________________________________________________________
+/**
+ * Contrôle des clés présentes dans les tableaux $_GET ou $_POST - piratage ?
+ *
+ * Soit $x l'ensemble des clés contenues dans $_GET ou $_POST
+ * L'ensemble des clés obligatoires doit être inclus dans $x.
+ * De même $x doit être inclus dans l'ensemble des clés autorisées,
+ * formé par l'union de l'ensemble des clés facultatives et de
+ * l'ensemble des clés obligatoires. Si ces 2 conditions sont
+ * vraies, la fonction renvoie true, sinon, elle renvoie false.
+ * Dit autrement, la fonction renvoie false si une clé obligatoire
+ * est absente ou si une clé non autorisée est présente; elle
+ * renvoie true si "tout va bien"
+ *
+ * @param string    $tabGlobal 'post' ou 'get'
+ * @param array     $clesObligatoires tableau contenant les clés
+ *                  qui doivent obligatoirement être présentes
+ * @param array     $clesFacultatives tableau contenant
+ *                  les clés facultatives
+ *
+ * @return bool     true si les paramètres sont corrects, false sinon
+ */
+function UtilParametresControle(string $tabGlobal, array $clesObligatoires, array $clesFacultatives = []): bool{
+    $x = strtolower($tabGlobal) == 'post' ? $_POST : $_GET;
+
+    $x = array_keys($x);
+    // $clesObligatoires doit être inclus dans $x
+    if (count(array_diff($clesObligatoires, $x)) > 0){
+        return false;
+    }
+    // $x doit être inclus dans
+    // $clesObligatoires Union $clesFacultatives
+    if (count(array_diff($x, array_merge($clesObligatoires, $clesFacultatives))) > 0){
+        return false;
+    }
+    return true;
+}
+
+
+
+//_________________________________
+/**
+ * la fonction retourne le jour de la semaine
+ * d'une date donnée
+ * 
+ * @param   int     $d  jour
+ * @param   int     $m  mois
+ * @param   int     $y  année
+ * @return  int     [1, 7] 7 jours de la semaine
+ * 
+ */
+function UtilJourSemaine($d, $m, $y){
+
+    static $t = array(0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4);
+    $y -= $m < 3;
+    return (($y + (int)($y / 4) - (int)($y / 100) + (int)($y / 400) + $t[$m - 1] + $d) % 7);
+}
+
+
+
+/**
+ *  Protection des entrées (chaînes envoyées au serveur MySQL)
+ *
+ * Avant insertion dans une requête SQL, certains caractères spéciaux doivent être échappés (", ', ...).
+ * Toutes les chaines de caractères provenant de saisies de l'utilisateur doivent être protégées
+ * en utilisant la fonction mysqli_real_escape_string() (si elle est disponible)
+ * Cette dernière fonction :
+ * - protège les caractères spéciaux d'une chaîne (en particulier les guillemets)
+ * - permet de se protéger contre les attaques de type injections SQL.
+ *
+ *  Si on lui transmet un tableau, la fonction renvoie un tableau où toutes les chaines
+ *  qu'il contient sont protégées, les autres données du tableau ne sont pas modifiées.
+ *
+ *   @param    mysqli         $bd         l'objet représantant la connexion au serveur MySQL
+ *   @param    array|string   $content    la chaine à protéger ou un tableau contenant des chaines à protéger
+ *
+ *   @return   array|string               la chaîne protégée ou le tableau
+*/  
+function BdProtegerEntree(mysqli $bd, array|string $content): array|string {
+    if (is_array($content)) {
+        foreach ($content as &$value) {
+            if (is_array($value) || is_string($value)){
+                $value = bdProtegerEntree($bd,$value);
+            }
+        }
+        unset ($value); // à ne pas oublier (de façon générale)
+        return $content;
+    }
+    // $content est de type string
+    if (function_exists('mysqli_real_escape_string')) {
+        return mysqli_real_escape_string($bd, $content);
+    }
+    if (function_exists('mysqli_escape_string')) {
+        return mysqli_escape_string($bd, $content);
+    }
+    return addslashes($content);
+}
 
 
 //____________________________________________________________________________
@@ -185,6 +283,24 @@ function BdSendRequest(mysqli $bd, string $sql): mysqli_result|bool {
     }
 }
 
+
+
+//_________________________________________________
+/**
+ * converti une date de anglais => français
+ * 
+ * @param   int|string  $date
+ * @param   string  $format
+ * @return  string
+ */
+function UtilDateEnFrançais($date, $format) 
+{
+    $english_days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+    $french_days = array('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche');
+    $english_months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+    $french_months = array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
+    return str_replace($english_months, $french_months, str_replace($english_days, $french_days, date($format, strtotime($date) ) ) );
+}
 
 
 
