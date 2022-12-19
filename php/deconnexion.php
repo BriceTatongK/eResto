@@ -1,11 +1,26 @@
 <?php
 
-# redirection vers la page d'origine
-if (isset($_SESSION['url'])) {
-    $goto = $_SESSION['url'];
+session_start();
+
+if (isset($_SESSION['etNumero'])) {
+
+    unset($_SESSION['etNumero']);
+    unset($_SESSION['etLogin']);
+
+    // url de redirection
+    $url = (isset($_SESSION['url']))?$_SESSION['url']:'../index.php';
+
+    // libèrer les variables de session
+    unset($_SESSION['url']);
+
+    // destruction de la session
+    session_destroy();
+
+    // redirection vers l'url
+    header('Location: '.$url);
+    exit;
 }
 
-# termine la session
-
+//header('Location: menu.php');
 
 ?>

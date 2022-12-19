@@ -1,30 +1,20 @@
 <?php
 
-session_start();
-$_SESSION['url'] = $_SERVER['REQUEST_URI'];
+require_once('bibli_generale.php');
+require_once('bibli_eRestoU.php');
+
+ob_start(); // bufferisation
+
+session_start(); //nouvelle session
+
+// affiche entete
+AffEntete('eRestoU | Inscription', '../styles/eResto.css');
+
+// affiche menu navigation
+AffMenuNavigation((isset($_SESSION['etLogin']))?$_SESSION['etLogin']:'', '..');
 
 
-echo
-'<!doctype html>',
-'<html lang="fr">',
-
-'<head>',
-    '<meta charset="UTF-8">',
-    '<title>eRestoU | Inscription</title>',
-    '<link rel="stylesheet" type="text/css" href="../styles/eResto.css">',
-'</head>',
-
-'<body>',
-    '<main>',
-        '<header>',
-            '<h1>Inscription</h1><a href="http://www.crous-bfc.fr" target="_blank"></a><a href="http://www.univ-fcomte.fr" target="_blank"></a></header>',
-        '<nav>',
-            '<ul>',
-                '<li><a href="../index.php">Accueil</a></li>',
-                '<li><a href="../php/menu.php">Menus et repas</a></li>',
-                '<li><a href="../php/connexion.php">Connexion</a></li>',
-            '</ul>',
-        '</nav>',
+echo 
         '<section>',
             '<h3>Formulaire d\'inscription</h3>',
             '<p>Pour vous inscrire, remplissez le formulaire ci-dessous.</p>',
@@ -74,13 +64,13 @@ echo
                     '</tr>',
                 '</table>',
             '</form>',
-        '</section>',
-        '<footer>&copy; Master Info EAD - Octobre 2022 - Université de Franche-Comté - CROUS de Franche-Comté</footer>',
-    '</main>',
-'</body>',
-
-'</html>';
+        '</section>';
 
 
+// affiche pied de page
+AffPiedDePage();
+
+// envoi du buffer
+ob_end_flush();
 
 ?>

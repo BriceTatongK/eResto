@@ -82,8 +82,8 @@ function AffEntete(string $titre, string $css): void {
  * élément commun à toutes les pages
  * la fonction verifie si l'utilisateur est authentifié
  * 
- * @param   string   $Login     variable de session  $_SESSION['etLogin'], contenant le numero étudiant
- * @param   string   $prefixe    pour obtenir le path correct aux pages
+ * @param   string   $Login         |variable de session  $_SESSION['etLogin'], contenant le numero étudiant
+ * @param   string   $prefixe       |pour obtenir le path correct aux pages
  * 
  * @return void
  */
@@ -91,12 +91,12 @@ function AffMenuNavigation($Login, $prefixe) : void {
 
     echo
     '<nav>',
-            '<ul>',
-                '<li><a href="', $prefixe, '/index.php">Accueil</a></li>',
-                '<li><a href="', $prefixe, '/php/menu.php">Menus et repas</a></li>';
+        '<ul>',
+            '<li><a href="', $prefixe, '/index.php">Accueil</a></li>',
+            '<li><a href="', $prefixe, '/php/menu.php">Menus et repas</a></li>';
 
-    if ( $Login !== '' ) {
-        echo '<li><a href="', $prefixe, '/php/deconnexion.php">Deconnexion["',$Login,']</a></li>';
+    if ( $Login != '' ) {
+        echo '<li><a href="', $prefixe, '/php/deconnexion.php">Deconnexion[',$Login,']</a></li>';
     }else {
         echo '<li><a href="', $prefixe, '/php/connexion.php">Connexion</a></li>';
     }
@@ -113,7 +113,8 @@ function AffMenuNavigation($Login, $prefixe) : void {
  * @return void
  */
 function AffPiedDePage() : void{
-    echo '<footer>',
+    echo 
+    '<footer>',
             '&copy; Master Info EAD - Octobre 2022 - Université de Franche-Comté - CROUS de Franche-Comté',
         '</footer>',
     '</main>', 
@@ -198,7 +199,7 @@ function UtilParametresControle(string $tabGlobal, array $clesObligatoires, arra
 
 //_________________________________
 /**
- * la fonction retourne le jour de la semaine
+ * la fonction retourne le numéro du jour de la semaine
  * d'une date donnée
  * 
  * @param   int     $d  jour
@@ -229,10 +230,9 @@ function UtilJourSemaine($d, $m, $y){
  *  Si on lui transmet un tableau, la fonction renvoie un tableau où toutes les chaines
  *  qu'il contient sont protégées, les autres données du tableau ne sont pas modifiées.
  *
- *   @param    mysqli         $bd         l'objet représantant la connexion au serveur MySQL
- *   @param    array|string   $content    la chaine à protéger ou un tableau contenant des chaines à protéger
- *
- *   @return   array|string               la chaîne protégée ou le tableau
+ *   @param    mysqli         $bd         |l'objet représantant la connexion au serveur MySQL
+ *   @param    array|string   $content    |la chaine à protéger ou un tableau contenant des chaines à protéger
+ *   @return   array|string               |la chaîne protégée ou le tableau
 */  
 function BdProtegerEntree(mysqli $bd, array|string $content): array|string {
     if (is_array($content)) {

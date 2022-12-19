@@ -3,123 +3,189 @@
 require_once('bibli_generale.php');
 require_once('bibli_eRestoU.php');
 
-session_start();
+// bufferisation
 ob_start();
 
-//$_SESSION['url'] = $_SERVER['REQUEST_URI']; // enregistre url courante.
-$errs = [];
-if (isset($_POST['btnConnexion'])) {
-    var_dump($_POST);
-    # validation des champs du form reçus.
-    # appel la fonction de validation qui exit du script s'il ya potentiel error.
-    if ( !isset($_POST['login']) || !isset($_POST['password']) ) {
-        $errs[] = 'enter tout';
-    }
-    # les clés sont valides
+// nouvelle session
+session_start();
 
-    # les tests suivants seront placés ici
-    // test du login
-    $nom = trim($_POST['login']);
-    $l = mb_strlen($nom, encoding:'UTF-8');
-    if ($l < 2 || $l > 8) {
-        $errs[] = 'Le nom doit contenir entre 2 et 8 caractères';
-    }
-    $noTags = strip_tags($nom);
-    if ($noTags != $nom){
-        $errs[] = 'Le nom ne doit pas contenir de tags HTML';
-    }
+$Errs = []; // array pour les erreurs
 
-    // test de la password
-    if (strlen($_POST['password']) == 0) {
-        $errs[] = '';
-    }
+$Nom = ''; // nom de login
 
-    if (count($errs) > 0){
-        echo '<p>Des erreurs ont été détectées :';
-        foreach($errs as $err){
-            echo '<br>- ', $err;
+$Pass = ''; // mot de pass
+
+UtilChampDonneeCONN($Errs, $Nom, $Pass);
+
+##############################
+########### CONTENU DE LA PAGE
+##############################
+
+// affiche en tète
+AffEntete('eRestoU | Connexion', '../styles/eResto.css');
+
+// affiche menu navigation
+AffMenuNavigation((isset($_SESSION['etLogin']))?$_SESSION['etLogin']:'', '..');
+
+// affiche le contenu de la et les eventuelles erreurs de connexion
+AffContenuConn($Errs, $Nom, $Pass);
+
+// pied de page
+AffPiedDePage();
+
+// envoi du buffer
+ob_end_flush();
+
+
+
+
+
+//________________________________________
+/**
+ * check les camps
+ * @param   array   &$errs   |s
+ * @param   string  &$nom    |
+ * @param   string  &$pass   |
+ * @return  void
+ */
+function UtilChampDonneeCONN(&$errs, &$nom, &$pass): void{
+
+    if (isset($_POST['btnConnexion'])) {
+
+        //var_dump($_POST);
+        # validation des champs du form reçus.
+        # appel la fonction de validation qui exit du script s'il ya potentiel error.
+        if ( !isset($_POST['login']) || !isset($_POST['password']) ) {
+            $errs[] = '=> entrer toutes les informations';
+            return;
         }
-        echo '</p>';
+        
+        // test du login
+        if (strlen($_POST['login']) > 0) {
+    
+            // test du login
+            $nom = trim($_POST['login']);
+            $l = mb_strlen($nom, encoding:'UTF-8');
+    
+            if ($l < 2 || $l > 8) {
+                $errs[] = '=> Le nom doit contenir entre 2 et 8 caractères';
+            }
+    
+            $noTags = strip_tags($nom);
+            if ($noTags != $nom){
+                $errs[] = '=> Le nom ne doit pas contenir de tags HTML';
+            }
+        }
+        else {
+            $errs[] = '=> entrer le login';
+        }
+    
+        // test de la password
+        if (strlen($_POST['password']) == 0) {
+            $errs[] = '=> entrer le mot de passe';
+        }else
+            $pass = $_POST['password'];
+    
+        // check errors
+        if (count($errs) > 0){
+            return;
+        }
+        else {
+    
+            // objet connexion
+            $bd = bdConnect();
+    
+            //-- Requête ----------------------------------------
+            $nom = '"'.$nom.'"';
+            $sql = "SELECT * FROM  etudiant WHERE etLogin = {$nom}";
+            $r = mysqli_query($bd, $sql);
+    
+            //-- Traitement --------------------------
+            if ($r->num_rows == 0) {
+                $errs[] = '=> utilisateur non enregistré !';
+            }
+            else {
+                $enr = mysqli_fetch_assoc($r);
+                $passwordBD = $enr['etMotDePasse'];
+                $passwordFORM = $_POST['password'];
+    
+                if (password_verify($passwordFORM, $passwordBD)) {
+                    
+                    // paramètres de session
+                    $_SESSION["etNumero"] = $enr['etNumero'];
+                    $_SESSION["etLogin"] = $enr['etLogin'];
+
+                    // l'url de redirection
+                    $url = (isset($_SESSION['url']))?$_SESSION['url']:'../index.php';
+    
+                    // redirection
+                    header('Location: '.$url);
+                    exit;
+                }
+                else {
+                    $errs[] = '=> la password n\'est pas correcte';
+                }
+            }
+            
+            // Libération de la mémoire associée au résultat de la requête
+            mysqli_free_result($r);
+    
+            //-- Déconnexion -------------------------
+            mysqli_close($bd);
+        }
     }
-    else {
-        echo '<p>Ok, les données saisies sont valides.</p>';
-    }
+    //else {
+        //header('Location: connexion.php'); // si le button set n'a pas été pressé, redirection vers la page de connexion.php
+        //exit;
+    //}
 }
-//else {
-//    header('location: connexion.php'); // si le button set n'a pas été pressé, redirection vers la page de connexion.php
-//}
 
 
-$bd = bdConnect();
+//_______________________________________
+/**
+ * affiche le coontenu de la page connexion
+ * @param   array   $err    |array contenant les erreurs de connexion à afficher
+ * @param   string  $n      |
+ * @param   string  $p      |
+ * @return  void
+ */
+function AffContenuConn(&$err, &$n, &$p): void {
+    
+    echo
+    '<section>',
+        '<h3>Formulaire de connexion</h3>',
+        '<p>Pour vous identifier, remplissez le formulaire ci-dessous.</p>';
 
-//-- Requête ----------------------------------------
-$sql = 'SELECT * FROM  etudiant';
-$r = mysqli_query($bd, $sql);
-
-//-- Traitement -------------------------------------
-while($enr = mysqli_fetch_assoc($r)){
-    foreach($enr as $var => $val){
-        echo $var, ':', $val, "    ";
+    // afficher Erreur
+    foreach ($err as $msg) {
+        echo '<p style="color:red; text-align:center;">','&#x1F61E; '.$msg,'</p>';
     }
-    echo '<br>';
+
+    echo
+        '<form action="connexion.php" method="post">',
+            '<table>',
+                '<tr>',
+                    '<td><label for="txtPseudo">Login ENT :</label></td>',
+                    '<td><input type="text" name="login" id="txtPseudo" value="', HtmlProtegerSortie($n),'"></td>',
+                '</tr>',
+
+                '<tr>',
+                    '<td><label for="txtPassword">Mot de passe :</label></td>',
+                    '<td><input type="password" name="password" id="txtPassword" value="', HtmlProtegerSortie($p),'"></td>',
+                '</tr>',
+
+                '<tr>',
+                    '<td colspan="2">
+                        <input type="submit" name="btnConnexion" value="Se connecter">
+                        <input type="reset" value="Annuler">
+                    </td>',
+                '</tr>',
+
+            '</table>
+            <input type="hidden" name="redirection" value="http://localhost:8888/2020-2021/EAD/eRestoU/index.php">',
+        '</form>',
+        '<p>Pas encore inscrit ? N\'attendez pas, <a href="inscription.php">inscrivez-vous</a> !</p>',
+    '</section>';
 }
-
-// Libération de la mémoire associée au résultat de la requête
-mysqli_free_result($r);
-//-- Déconnexion ------------------------------------
-mysqli_close($bd);
-
-
-
-echo
-'<!doctype html>',
-'<html lang="fr">',
-
-'<head>',
-    '<meta charset="UTF-8">',
-    '<title>eRestoU | Connexion</title>',
-    '<link rel="stylesheet" type="text/css" href="../styles/eResto.css">',
-'</head>',
-
-'<body>',
-    '<main>',
-        '<header>',
-            '<h1>Connexion</h1><a href="http://www.crous-bfc.fr" target="_blank"></a><a href="http://www.univ-fcomte.fr" target="_blank"></a></header>',
-        '<nav>',
-            '<ul>',
-                '<li><a href="../index.php">Accueil</a></li>',
-                '<li><a href="../php/menu.php">Menus et repas</a></li>',
-                '<li><a href="../php/connexion.php">Connexion</a></li>',
-            '</ul>',
-        '</nav>',
-        '<section>',
-            '<h3>Formulaire de connexion</h3>',
-            '<p>Pour vous identifier, remplissez le formulaire ci-dessous.</p>',
-
-// call fonction afficheErreur($errs); comme parametre l'array des erreurs
-
-            '<form action="connexion.php" method="post">',
-                '<table>',
-                    '<tr>',
-                        '<td><label for="txtPseudo">Login ENT :</label></td>',
-                        '<td><input type="text" name="login" id="txtPseudo" value=""></td>',
-                    '</tr>',
-                    '<tr>',
-                        '<td><label for="txtPassword">Mot de passe :</label></td>',
-                        '<td><input type="password" name="password" id="txtPassword"></td>',
-                    '</tr>',
-                    '<tr>',
-                        '<td colspan="2"><input type="submit" name="btnConnexion" value="Se connecter"><input type="reset" value="Annuler"></td>',
-                    '</tr>',
-                '</table><input type="hidden" name="redirection" value="http://localhost:8888/2020-2021/EAD/eRestoU/index.php">',
-            '</form>',
-            '<p>Pas encore inscrit ? N\'attendez pas, <a href="inscription.php">inscrivez-vous</a> !</p>',
-        '</section>',
-        '<footer>&copy; Master Info EAD - Octobre 2022 - Université de Franche-Comté - CROUS de Franche-Comté</footer>',
-    '</main>',
-'</body>',
-
-'</html>';
-
 
 ?>

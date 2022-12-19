@@ -6,12 +6,13 @@ ob_start();// bufferisation
 
 session_start();// nouvelle session
 
-
-/**************************************************
- * INFORMATIONS NECESSAIRE POUR AFFICHER LE CONTENU
- * ************************************************
- */
 $_SESSION['url'] = $_SERVER['REQUEST_URI'];// conserver l'url de cette page
+
+
+/***************************************************|
+ * INFORMATIONS NECESSAIRE POUR AFFICHER LE CONTENU |
+ * **************************************************
+ */
 
 $DateDeMenu = -1;// date selectionée pour un eventuel menu
 
@@ -34,15 +35,15 @@ if ($ErrDateUrl == 0) {
 }
 
 
-/********************************
- * AFFICHE DU CONTENU DE LA PAGE
- * ******************************
+
+/********************************|
+ * AFFICHE DU CONTENU DE LA PAGE |
+ * *******************************
  */
 AffEntete('Menus et repas', '../styles/eResto.css'); // Entete de page
 
 // affiche connexion ou deconnexion en fonction de si l'utilisateur est connecté ou pas.
-if (isset($_SESSION['etLogin'])) {AffMenuNavigation($_SESSION['etLogin'], '..');}
-else{AffMenuNavigation('', '..');}
+AffMenuNavigation((isset($_SESSION['etLogin']))?$_SESSION['etLogin']:'', '..');
 
 // contenu de cette page
 AffContenuPageMENU($ErrDateUrl, $ErrMessage, $RestoOuvert, $WeekEnd, $DateDeMenu, $menu, $repas, $commentaires);
@@ -52,6 +53,18 @@ mysqli_close($bd);// fermeture de la connexion
 AffPiedDePage();// pied de page
 
 ob_end_flush();// envoi du buffer
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -80,6 +93,7 @@ function BdDonneesMENU($bd, &$DateDeMenu, &$RestoOuvert, &$menu, &$commentaires,
                 )as menuJour
                 INNER JOIN plat ON menuJour.mePlat = plID
             )";
+
     // envoi de la requête SQL
     $res = bdSendRequest($bd, $sql);
 
@@ -101,13 +115,7 @@ function BdDonneesMENU($bd, &$DateDeMenu, &$RestoOuvert, &$menu, &$commentaires,
                 );
 
     // parcours des ressources :
-    ##############
-    echo'<p>##### => MENU </p>';
-    ##############
     while ($tab = $res->fetch_assoc()) {
-        #################
-        var_dump($tab); echo'<br>';
-        #################
         $platsDuJour[] = $tab['plID'];
 
         switch ($tab['plCategorie']) {
@@ -141,18 +149,11 @@ function BdDonneesMENU($bd, &$DateDeMenu, &$RestoOuvert, &$menu, &$commentaires,
             WHERE coDateRepas = {$DateDeMenu}";
 
     $res = bdSendRequest($bd, $sql);
-    ########################
-    echo'<p>##### => COMMENTAIRES </p>';
-    ########################
 
     while ($tab = $res->fetch_assoc()) {
         //$commentaires = $tab;
         $clé = $tab['coDateRepas'].$tab['coEtudiant'];
         $commentaires[$clé] = $tab;
-        
-        ####################
-        var_dump($tab);echo'<br>';
-        ####################
     }
 
     $res->free(); // libération des ressources
@@ -166,16 +167,9 @@ function BdDonneesMENU($bd, &$DateDeMenu, &$RestoOuvert, &$menu, &$commentaires,
                 WHERE reDate = {$DateDeMenu} AND reEtudiant = {$EtNumero}";
         
         $res = bdSendRequest($bd, $sql);
-        ###########################
-        echo'<p>##### => REPAS SELECTED </p>';
-        ###########################
         while ($tab = $res->fetch_assoc()) {
             $k = $tab['rePlat'];
             $RepasDuJour[$k] = $tab;
-
-            ####################
-            var_dump($tab);echo '<br>';
-            ####################
         }
         $res->free();   // libération des ressources
     }
@@ -266,8 +260,6 @@ function UtilDateMENU(&$DateDeMenu, &$WeekEnd, &$Messages): int{
  */
 function UtilGetDateEnLettreMENU($date): string {
     $d = new DateTimeImmutable($date);
-    //echo UtilDateEnFrançais($date, 'l j F Y'), '<br>';
-    //echo $d->format('l j F Y'), '<br>';
     return UtilDateEnFrançais($date, 'l j F Y');
 }
 

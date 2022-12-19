@@ -9,12 +9,15 @@ ob_start();
 // ouverture nouvelle session
 session_start();
 
+$_SESSION["url"] = $_SERVER['REQUEST_URI'];// conserver l'url de cette page
+
+
 // affiche entete de la page en fonction du 'Titre'; 'path css'
 AffEntete('Accueil', './styles/eResto.css');
 
 // affiche connexion ou deconnexion en fonction de si l'utilisateur est connecté ou pas.
-if (isset($_SESSION['etLogin'])) {AffMenuNavigation($_SESSION['etLogin'], '.');}
-else{AffMenuNavigation('', '.');}
+AffMenuNavigation((isset($_SESSION['etLogin']))?$_SESSION['etLogin']:'', '.');
+
 
 // affiche le contenu de la page. Le suffixe 'HO' => 'Here Only'
 AffContenuPageINDEX();
