@@ -105,6 +105,66 @@ function AffMenuNavigation($Login, $prefixe) : void {
 }
 
 
+//___________________________________________________________________
+/**
+ * Vérification des champs texte des formulaires
+ * - utilisé par les pages commentaire.php et inscription.php
+ *
+ * @param  string        $texte     texte à vérifier
+ * @param  string        $nom       chaîne à ajouter dans celle qui décrit l'erreur
+ * @param  array         $erreurs   tableau dans lequel les erreurs sont ajoutées
+ * @param  int           $long      longueur maximale du champ correspondant dans la base de données
+ *
+ * @return  void
+ */
+function UtilverifierTexte(string $texte, string $nom, array &$erreurs, int $long = -1) : void{
+    if (empty($texte)){
+        $erreurs[] = "$nom ne doit pas être vide.";
+    }
+    else if(strip_tags($texte) != $texte){
+        $erreurs[] = "$nom ne doit pas contenir de tags HTML";
+    }
+    elseif ($long > 0 && mb_strlen($texte, encoding:'UTF-8') > $long){
+        // mb_* -> pour l'UTF-8, voir : https://www.php.net/manual/fr/function.mb-strlen.php
+        $erreurs[] = "$nom ne peut pas dépasser $long caractères";
+    }
+}
+
+
+//_______________________________________________________________
+/**
+ * Termine une session et effectue une redirection vers la page transmise en paramètre
+ *
+ * Elle utilise :
+ *   -   la fonction session_destroy() qui détruit la session existante
+ *   -   la fonction session_unset() qui efface toutes les variables de session
+ * Elle supprime également le cookie de session
+ *
+ * Cette fonction est appelée quand l'utilisateur se déconnecte "normalement" et quand une
+ * tentative de piratage est détectée. On pourrait améliorer l'application en différenciant ces
+ * 2 situations. Et en cas de tentative de piratage, on pourrait faire des traitements pour
+ * stocker par exemple l'adresse IP, etc.
+ *
+ * @param string    URL de la page vers laquelle l'utilisateur est redirigé
+ *
+ * @return void
+ */
+function UtilsessionExit(string $page = '../index.php'): void {
+    session_destroy();
+    session_unset();
+    $cookieParams = session_get_cookie_params();
+    setcookie(session_name(), 
+            '', 
+            time() - 86400,
+            $cookieParams['path'], 
+            $cookieParams['domain'],
+            $cookieParams['secure'],
+            $cookieParams['httponly']
+        );
+    header("Location: $page");
+    exit();
+}
+
 
 //___________________________________________________________
 /**

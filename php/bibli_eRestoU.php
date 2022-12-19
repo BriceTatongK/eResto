@@ -34,10 +34,18 @@ define ('ANNEE_MAX', date('Y')+1);
 
 // Nombre de plats de catégorie 'boisson'
 define ('NB_CAT_BOISSON', 4);
-
 // Nombre de plats de catégorie 'divers'
 define ('NB_CAT_DIVERS', 2);
 
+define('NB_ANNEE_DATE_NAISSANCE', 100);
+define('AGE_MINIMUM', 16);
+
+// limites liées aux tailles des champs de la table etudiant
+define('LMAX_LOGIN', 8);    // taille du champ etLogin de la table etudiant
+define('LMAX_NOM',50);      // taille du champ etNom de la table etudiant
+define('LMAX_PRENOM',80);   // taille du champ etPrenom de la table etudiant
+
+define('LMIN_LOGIN', 4);
 
 
 

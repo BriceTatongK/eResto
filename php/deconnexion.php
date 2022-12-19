@@ -8,7 +8,7 @@ if (isset($_SESSION['etNumero'])) {
     unset($_SESSION['etLogin']);
 
     // url de redirection
-    $url = (isset($_SESSION['url']))?$_SESSION['url']:'../index.php';
+    $url = (isset($_SESSION['url']))?$_SESSION['url']:'./connexion.php';
 
     // libèrer les variables de session
     unset($_SESSION['url']);

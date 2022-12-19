@@ -134,10 +134,12 @@ function UtilChampDonneeCONN(&$errs, &$nom, &$pass): void{
             mysqli_close($bd);
         }
     }
-    //else {
-        //header('Location: connexion.php'); // si le button set n'a pas été pressé, redirection vers la page de connexion.php
-        //exit;
-    //}
+
+    // si l'user est déjà connecté => redirection vers index.php
+    if (isset($_SESSION['etLogin'])) {
+        header('Location: ../index.php');
+        exit();
+    }
 }
 
 
