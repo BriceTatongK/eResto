@@ -358,13 +358,13 @@ function AffCommentaireMENU($commentaires): void{
     if (count($commentaires) > 0) {
         $note = 0;
         $Nombre = 0;
-        foreach($commentaires as $key => $value){
-            $note = $note + (int)$value['coNote'];
+        foreach($commentaires as $key => $val){
+            $note = $note + (int)$val['coNote'];
             $Nombre++ ;
         }
-        echo '<p>Note moyenne de ce menu : ', $note, '/5 sur la base de ', $Nombre, ' commentaires</p>';
+        echo '<p>Note moyenne de ce menu : ', round($note/$Nombre), '/5 sur la base de ', $Nombre, ' commentaires</p>';
 
-        foreach($commentaires as $key => $value){
+        foreach($commentaires as $key => $value) {
             $nom = $value['etPrenom'].' '.$value['etNom'];
             $Date = UtilDateEnFrançais(substr($value['coDatePublication'], 0, 8), 'j F Y');    //12 octobre 2022 à 17h42
             $Heure = substr($value['coDatePublication'], 8, 2).'h'.substr($value['coDatePublication'], 10, 2);
@@ -374,13 +374,15 @@ function AffCommentaireMENU($commentaires): void{
                 '<p>', $value['coTexte'],'</p>',
                 '<footer>Note : ', $value['coNote'],' / 5</footer>';
 
-            if (isset($_SESSION['etNumero'])) {
-                $value = $value['coDateRepas'];
-                $img = $value.'_'.$_SESSION['etNumero'];
+            $FormValue = $value['coDateRepas'];
+            $img = $FormValue.'_'.$value['coEtudiant'];
+            $file = '../upload/'.$img.'.jpg';
+            if (file_exists($file)) {
                 echo
-                '<a href="../upload/', $img, '.jpg" target="_blank"><img src="../upload/', $img, '.jpg" alt="Photo illustrant le commentaire" title="Cliquez pour agrandir"></a>',
-                '<form action="commentaire.php" method="post"><input type="hidden" value="20221012" name="date"><input type="submit" style="width: auto;" value="Editer le commentaire"></form>';
+                '<a href="',$file,'" target="_blank"><img src="',$file,'" alt="Photo illustrant le commentaire" title="Cliquez pour agrandir"></a>',
+                '<form action="commentaire.php" method="post"><input type="hidden" value="',$FormValue,'" name="date"><input type="submit" style="width: auto;" value="Editer le commentaire"></form>';
             }
+
             echo
             '</article>';
         }
@@ -417,6 +419,10 @@ function AffPlatsMENU($MenuDuJour, $repas): void{
                             );
 
     foreach($MenuDuJour as $categorie => $ListePlats){
+        
+        // si une categorie ne contient aucun plat pour ce menu, continue sans afficher le titre
+        if (count($ListePlats) == 0) {continue;}
+
         $h3 = $categorie_En_h3[$categorie];
         echo
         '<section>',
