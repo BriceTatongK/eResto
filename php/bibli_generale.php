@@ -131,6 +131,7 @@ function UtilverifierTexte(string $texte, string $nom, array &$erreurs, int $lon
 }
 
 
+
 //_______________________________________________________________
 /**
  * Termine une session et effectue une redirection vers la page transmise en paramètre

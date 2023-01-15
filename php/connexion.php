@@ -40,10 +40,10 @@ ob_end_flush();
 
 
 
-//________________________________________
+//_____________________________________________________
 /**
- * check les camps
- * @param   array   &$errs   |s
+ * validation des champs de données du form de connexion
+ * @param   array   &$errs   |
  * @param   string  &$nom    |
  * @param   string  &$pass   |
  * @return  void
@@ -52,9 +52,7 @@ function UtilChampDonneeCONN(&$errs, &$nom, &$pass): void{
 
     if (isset($_POST['btnConnexion'])) {
 
-        //var_dump($_POST);
         # validation des champs du form reçus.
-        # appel la fonction de validation qui exit du script s'il ya potentiel error.
         if ( !isset($_POST['login']) || !isset($_POST['password']) ) {
             $errs[] = '=> entrer toutes les informations';
             return;

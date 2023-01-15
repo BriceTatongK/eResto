@@ -48,7 +48,7 @@ ob_end_flush();
  * @param   array   $errs   |
  * @return  void
  */
-function AffContenuPageINSCRIPTION($errs): void{
+function AffContenuPageINSCRIPTION($errs): void {
 
     $anneeCourante = (int) date('Y');
     
@@ -68,7 +68,7 @@ function AffContenuPageINSCRIPTION($errs): void{
 
     //n'affiche rien si pas de soumission
     UtilaffResultatSoumission($errs, 'Les erreurs suivantes ont été relevées lors de votre inscription');
-    echo
+                echo
                 '<table>',
                     '<tr>',
                         '<td><label for="txtLogin">Entrez votre login étudiant :</label></td>',
@@ -92,7 +92,7 @@ function AffContenuPageINSCRIPTION($errs): void{
                         AffDateNavINSCRIPTION($jour, 'jour');
                         AffDateNavINSCRIPTION($mois, 'mois');
                         AffDateNavINSCRIPTION($annee, 'annee');
-    echo
+                        echo
                         '<td>',
                     '</tr>',
                     '<tr>',
@@ -112,7 +112,7 @@ function AffContenuPageINSCRIPTION($errs): void{
         '</section>';
 }
 
-
+//____________________________________________
 /**
  *  Traitement d'une demande d'inscription.
  *
@@ -260,11 +260,12 @@ function traitementInscriptionL(): array {
  * - en cas de modification réussie, $resultat est une chaîne
  * - quand la demande de modification échoue, $resultat est un tableau de chaînes
  *
- * @param array|string|null   $resultat     Résultat de la soumission
- * @param string              $titre        titre du bloc div affiché en cas d'erreur
+ * @param array|string|null   $resultat     |Résultat de la soumission
+ * @param string              $titre        |titre du bloc div affiché en cas d'erreur
  *
  * @return  void
  */
+
 function UtilaffResultatSoumission(array|string|null $resultat, string $titre = 'Les erreurs suivantes ont été relevées') : void{
     if ($resultat !== null) {
         if (is_array($resultat)) {
@@ -281,12 +282,11 @@ function UtilaffResultatSoumission(array|string|null $resultat, string $titre = 
 }
 
 
-
 //________________________________________
 /**
  * affiche l'élement de selection de la date
- * @param   int     $selected      jour selectioné
- * @param   string  $str    
+ * @param   int     $selected   | jour selectioné
+ * @param   string  $str        |
  * @return  void
  */
 function AffDateNavINSCRIPTION($selected, $str): void{
